@@ -60,22 +60,22 @@ done
 TEMP_FILE="$NGINX_CONF_DIR/sites-available/temp-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1).conf"
 cp "$BOILERPLATE_DIR/reverse-proxy-template.conf" "$TEMP_FILE"
 
+# 根据WEBSOCKET_SUPPORT参数决定是否添加websocket支持
+if [ "$WEBSOCKET_SUPPORT" = "true" ]; then
+    sed -i 's/#include BOILERPLATE_PATH\/websocket\.conf;/include BOILERPLATE_PATH\/websocket.conf;/' "$TEMP_FILE"
+fi
+
+# 根据UPLOAD_SUPPORT参数决定是否添加文件上传支持
+if [ "$UPLOAD_SUPPORT" = "true" ]; then
+    sed -i 's/#include BOILERPLATE_PATH\/uploads\.conf;/include BOILERPLATE_PATH\/uploads.conf;/' "$TEMP_FILE"
+fi
+
 # 替换模板文件中的变量
 sed -i "s#BOILERPLATE_PATH#${BOILERPLATE_DIR}#g" "$TEMP_FILE"
 sed -i "s/HOSTNAME/${HOSTNAME}/g" "$TEMP_FILE"
 sed -i "s#SSL_CERT_PATH#${SSL_CERT_PATH}#g" "$TEMP_FILE"
 sed -i "s#SSL_CERT_KEY_PATH#${SSL_CERT_KEY_PATH}#g" "$TEMP_FILE"
 sed -i "s#PROXY_ADDRESS#${PROXY_ADDRESS}#g" "$TEMP_FILE"
-
-# 根据WEBSOCKET_SUPPORT参数决定是否添加websocket支持
-if [ "$WEBSOCKET_SUPPORT" = "true" ]; then
-    sed -i '/#include BOILERPLATE_PATH\/websocket.conf/s/^#//' "$TEMP_FILE"
-fi
-
-# 根据UPLOAD_SUPPORT参数决定是否添加文件上传支持
-if [ "$UPLOAD_SUPPORT" = "true" ]; then
-    sed -i '/#include BOILERPLATE_PATH\/uploads.conf/s/^#//' "$TEMP_FILE"
-fi
 
 # 如果包含 --dry-run 参数，则输出目标文件路径并结束
 if [ "$DRY_RUN" = "true" ]; then
