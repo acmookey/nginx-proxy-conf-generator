@@ -1,0 +1,54 @@
+nginx-proxy-conf-generator(1)
+
+名称
+     nginx-proxy-conf-generator：Nginx 反向代理配置生成工具
+
+描述
+     这个脚本是用来生成Nginx的反向代理配置文件，支持通过参数配置 “域名”、“代理地址”、“SSL证书路径”、“是否配置websocket”、“是否配置上传”。
+     此脚本的创作是通过 “文字描述 + https://devv.ai/ 生成”的方式完成的主要功能。
+     编写此脚本的灵感来源于 https://github.com/nginx-boilerplate/nginx-boilerplate 再加上我个人经常配置Nginx反向代理积累的经验。
+
+参数
+     --prefix <配置文件存放路径>
+          描述：生成的配置文件存放的基础路径。缺省值是“/etc/nginx”, 即缺省情况下，生成的配置文件存放在 "/etc/nginx/sites-available"中。
+		  可选参数
+		  
+     -h, --hostname <反向代理的域名>
+          描述：反向代理的域名
+          必填参数
+
+          Example:
+            sh ./nginx-proxy-conf-generator.sh -h 'text.com'
+
+     -p, --proxy <反向代理的地址>
+          描述：反向代理的地址
+          必填参数
+
+          Example:
+            sh ./nginx-proxy-conf-generator.sh -p 'http://127.0.0.1:8080'
+
+     --cert <SSL证书>
+          描述：SSL证书路径
+          必填参数
+
+          Example:
+            sh ./nginx-proxy-conf-generator.sh --cert '/path/to/test.com.pem'
+
+     --key <SSL证书密钥>
+          描述：SSL证书密钥路径
+          必填参数
+
+          Example:
+            sh ./nginx-proxy-conf-generator.sh --key '/path/to/test.com.key'
+
+     -w, --websocket
+          描述：开启Websocket代理配置，当此参数存在时，生成的反向代理配置中包含websocket的相关选项
+          可选参数
+
+     -u, --upload
+          描述：开启上传的相关参数配置，当此参数存在时，生成的配置文件中包含上传参数
+          可选参数
+
+     --dry-run
+          描述：仅生成配置文件用于参考或供后续的手动修改使用
+          可选参数
